@@ -33,10 +33,10 @@ The project demonstrates a repeatable data validation and reconciliation workflo
 
 - Python 3.11+
 - CSV and JSON
-- `pathlib`
-- `logging`
-- `unittest`
-- `uv`
+- pathlib
+- logging
+- unittest
+- uv
 
 The current implementation uses Python's standard library and does not require external data-processing libraries.
 
@@ -57,25 +57,25 @@ data-reconciliation-pipeline/
 └── README.md
 ```
 
-The `output/` directory is created when the pipeline runs. It contains generated reconciliation reports and CSV files.
+The `output/` directory is created when the pipeline runs. It contains generated reconciliation reports and log files.
 
 ## 5. Requirements
 
 - Python 3.11 or later
-- `uv` package manager
+- uv package manager
 - Visual Studio Code or another code editor
 
 ## 6. Setup and Installation
 
 Clone or download the repository and open the project folder in the terminal.
 
-```powershell
+```bash
 cd data-reconciliation-pipeline
 ```
 
 Install the project dependencies and prepare the environment:
 
-```powershell
+```bash
 uv sync
 ```
 
@@ -85,13 +85,13 @@ The project currently uses Python's standard library, so there are no additional
 
 To generate the source and target datasets, run:
 
-```powershell
+```bash
 uv run python generate_data.py
 ```
 
 The generator:
 
-- Uses a fixed random seed (`42`) for reproducibility.
+- Uses a fixed random seed (42) for reproducibility.
 - Creates 100,000 source order records.
 - Generates corresponding target records.
 - Intentionally increases the amount of every 100th target record by 50.
@@ -103,7 +103,7 @@ The generated files are saved in the `data/` directory.
 
 Execute:
 
-```powershell
+```bash
 uv run python main.py
 ```
 
@@ -122,7 +122,7 @@ The pipeline performs the following operations:
 
 Execute the test suite:
 
-```powershell
+```bash
 uv run python -m unittest discover -s tests -v
 ```
 
@@ -145,7 +145,7 @@ The current test suite contains 16 tests covering:
 - Malformed amounts
 - Aggregate differences
 
-**Latest test result:** All 16 tests passed.
+**Latest test result: All 16 tests passed.**
 
 ## 10. Input Data Dictionary
 
@@ -153,8 +153,8 @@ Both input datasets are CSV files.
 
 | Field | Data Type | Description |
 |---|---|---|
-| `order_id` | String | Unique identifier used to identify an order |
-| `amount` | Integer | Order amount used for reconciliation |
+| order_id | String | Unique identifier used to identify an order |
+| amount | Integer | Order amount used for reconciliation |
 
 ### Business Key
 
@@ -166,7 +166,7 @@ Duplicate order IDs are rejected during validation to avoid ambiguous comparison
 
 The pipeline generates the following files inside the `output/` directory.
 
-### `reconciliation_report.json`
+### reconciliation_report.json
 
 Contains the reconciliation summary, including:
 
@@ -184,7 +184,7 @@ Contains the reconciliation summary, including:
 - Reconciliation status
 - Execution duration
 
-### `mismatches.csv`
+### mismatches.csv
 
 Contains record-level reconciliation differences, including:
 
@@ -194,7 +194,7 @@ Contains record-level reconciliation differences, including:
 - Source amount
 - Target amount
 
-### `rejects.csv`
+### rejects.csv
 
 Contains invalid records and validation details, including:
 
@@ -204,6 +204,10 @@ Contains invalid records and validation details, including:
 - Order ID
 - Amount
 - Rejection reason
+
+### pipeline.log
+
+Contains execution logs and error information to help monitor pipeline activity and investigate failures.
 
 The JSON report provides a summary, while the CSV files provide details for investigating individual records.
 
@@ -221,17 +225,17 @@ The reconciliation process identifies:
 
 ### Reconciliation Status
 
-The pipeline reports `PASSED` when there are no rejected records, amount mismatches, or missing records.
+The pipeline reports **PASSED** when there are no rejected records, amount mismatches, missing records, or aggregate differences.
 
-It reports `FAILED` when reconciliation differences or rejected records are detected.
+It reports **FAILED** when any reconciliation difference or rejected record is detected.
 
-An aggregate difference is also calculated to identify differences between source and target totals.
+The aggregate difference is calculated by comparing the total source amount with the total target amount. This provides an additional check to identify inconsistencies between the datasets.
 
 ## 13. Synthetic Dataset and Expected Results
 
 The generator creates a reproducible dataset using a fixed random seed.
 
-Current dataset configuration:
+### Current Dataset Configuration
 
 | Metric | Expected Value |
 |---|---:|
@@ -249,9 +253,9 @@ Therefore:
 
 - 1,000 records contain intentional amount mismatches.
 - The target aggregate is 50,000 greater than the source aggregate.
-- The expected reconciliation status is `FAILED`.
+- The expected reconciliation status is FAILED.
 
-This is an intentional test scenario. A `FAILED` reconciliation status confirms that the pipeline detects the injected differences; it does not mean that the program failed to execute.
+This is an intentional test scenario. A FAILED reconciliation status confirms that the pipeline detects the injected differences; it does not mean that the program failed to execute.
 
 ## 14. Idempotency and Repeatability
 
@@ -270,7 +274,7 @@ This supports repeatable testing and prevents previous report contents from bein
 
 ## 15. Logging and Monitoring
 
-The pipeline uses Python's `logging` module to record execution activity and errors.
+The pipeline uses Python's logging module to record execution activity and errors.
 
 Run information includes a unique run ID, timestamps, record counts, rejection counts, and execution duration in the generated reconciliation report.
 
@@ -411,10 +415,10 @@ The pipeline was tested locally using 100,000 source records and 100,000 target 
 | Missing source records | 0 |
 | Missing target records | 0 |
 | Aggregate difference | 50,000 |
-| Observed execution time | 0.66 seconds |
+| Observed execution time | 0.628 seconds |
 | Reconciliation status | FAILED |
 
-The `FAILED` status is expected because the synthetic target dataset intentionally contains amount differences.
+The FAILED status is expected because the synthetic target dataset intentionally contains amount differences.
 
 The execution time is based on a local run and may vary depending on hardware, system load, and environment.
 
@@ -425,8 +429,6 @@ The execution time is based on a local run and may vary depending on hardware, s
 - Memory usage increases with input size because records are processed in memory.
 - Larger datasets should be tested before making scalability claims.
 - Future performance work could include chunked processing, memory profiling, and repeatable benchmarks.
-
----
 
 ## Conclusion
 
