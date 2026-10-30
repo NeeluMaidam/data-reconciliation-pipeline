@@ -1,35 +1,62 @@
+
 import csv
 import json
 import logging
 import time
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
-source_file = Path("data/source_orders.csv")
-target_file = Path("data/target_orders.csv")
-output_folder = Path("output")
+SOURCE_FILE = Path("data/source_orders.csv")
+TARGET_FILE = Path("data/target_orders.csv")
+OUTPUT_FOLDER = Path("output")
+
+REQUIRED_COLUMNS = {"order_id", "amount"}
+ALLOWED_COLUMNS = {"order_id", "amount"}
+
+
+def get_timestamp():
+    return datetime.now(timezone.utc).isoformat()
 
 
 def read_orders(file_path):
+    rows = []
+
     with open(file_path, "r", newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file, skipinitialspace=True)
 
-        if reader.fieldnames is None:
-            raise ValueError(f"CSV file is empty: {file_path}")
+        if not reader.fieldnames:
+            raise ValueError(f"CSV file is empty or has no header: {file_path}")
 
-        reader.fieldnames = [
-            name.strip().lower() for name in reader.fieldnames
-        ]
+        columns = [name.strip().lower() for name in reader.fieldnames]
 
-        required_columns = {"order_id", "amount"}
-        if not required_columns.issubset(reader.fieldnames):
+        if len(columns) != len(set(columns)):
+            raise ValueError(f"Duplicate column names found in {file_path}")
+
+        missing_columns = REQUIRED_COLUMNS - set(columns)
+        unexpected_columns = set(columns) - ALLOWED_COLUMNS
+
+        if missing_columns:
             raise ValueError(
-                f"{file_path} must contain order_id and amount columns"
+                f"Missing required columns in {file_path}: "
+                f"{sorted(missing_columns)}"
             )
 
-        print(f"Columns in {file_path}: {reader.fieldnames}")
+        if unexpected_columns:
+            raise ValueError(
+                f"Unexpected columns in {file_path}: "
+                f"{sorted(unexpected_columns)}"
+            )
 
-        rows = []
-        for row in reader:
+        reader.fieldnames = columns
+
+        for row_number, row in enumerate(reader, start=2):
+            if None in row:
+                raise ValueError(
+                    f"Malformed CSV row {row_number} in {file_path}: "
+                    "too many fields"
+                )
+
             if not row or all(
                 value is None or not str(value).strip()
                 for value in row.values()
@@ -37,14 +64,15 @@ def read_orders(file_path):
                 continue
 
             cleaned_row = {
-                key.strip().lower(): value.strip() if value else ""
+                key.strip().lower(): (
+                    value.strip() if value is not None else ""
+                )
                 for key, value in row.items()
-                if key is not None
             }
+
             rows.append(cleaned_row)
 
-        return rows
-
+    return rows
 
 
 def validate_orders(rows, file_name):
@@ -60,13 +88,15 @@ def validate_orders(rows, file_name):
 
         if not order_id:
             reason = "missing_order_id"
+
         elif not amount:
             reason = "missing_amount"
+
         else:
             try:
-                amount_value = int(amount)
+                numeric_amount = int(amount)
 
-                if amount_value < 0:
+                if numeric_amount < 0:
                     reason = "invalid_amount"
 
             except ValueError:
@@ -83,16 +113,26 @@ def validate_orders(rows, file_name):
                 "amount": amount,
                 "reject_reason": reason
             })
+
         else:
             seen_ids.add(order_id)
-            valid_rows.append(row)
+
+            valid_rows.append({
+                "order_id": order_id,
+                "amount": str(int(amount))
+            })
 
     return valid_rows, rejected_rows
 
 
 def reconcile(source_orders, target_orders):
-    source_by_id = {row["order_id"]: row for row in source_orders}
-    target_by_id = {row["order_id"]: row for row in target_orders}
+    source_by_id = {
+        row["order_id"]: row for row in source_orders
+    }
+
+    target_by_id = {
+        row["order_id"]: row for row in target_orders
+    }
 
     matched_count = 0
     amount_mismatch_count = 0
@@ -100,7 +140,11 @@ def reconcile(source_orders, target_orders):
     missing_from_target_count = 0
     mismatches = []
 
-    for order_id in sorted(set(source_by_id) | set(target_by_id)):
+    all_order_ids = sorted(
+        set(source_by_id) | set(target_by_id)
+    )
+
+    for order_id in all_order_ids:
         source = source_by_id.get(order_id)
         target = target_by_id.get(order_id)
 
@@ -116,7 +160,7 @@ def reconcile(source_orders, target_orders):
             source_amount = source["amount"]
             target_amount = ""
 
-        elif source["amount"] != target["amount"]:
+        elif int(source["amount"]) != int(target["amount"]):
             issue = "amount_mismatch"
             amount_mismatch_count += 1
             source_amount = source["amount"]
@@ -144,45 +188,58 @@ def reconcile(source_orders, target_orders):
 
 def write_csv(file_path, fieldnames, rows):
     with open(file_path, "w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(
+            file,
+            fieldnames=fieldnames,
+            extrasaction="ignore"
+        )
+
         writer.writeheader()
         writer.writerows(rows)
 
 
 def main():
-    output_folder.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        filename=str(output_folder / "pipeline.log"),
+        filename=str(OUTPUT_FOLDER / "pipeline.log"),
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
         force=True
     )
 
+    run_id = str(uuid.uuid4())
+    started_at = get_timestamp()
     start_time = time.time()
-    logging.info("Data reconciliation pipeline started.")
+
+    report_file = OUTPUT_FOLDER / "reconciliation_report.json"
+
+    logging.info(
+        "Pipeline started. run_id=%s started_at=%s",
+        run_id,
+        started_at
+    )
 
     try:
-        source_raw = read_orders(source_file)
-        target_raw = read_orders(target_file)
-
-        logging.info("Source and target data loaded successfully.")
+        source_raw = read_orders(SOURCE_FILE)
+        target_raw = read_orders(TARGET_FILE)
 
         source_row_count = len(source_raw)
         target_row_count = len(target_raw)
 
         source_orders, source_rejects = validate_orders(
-            source_raw, "source_orders.csv"
+            source_raw, SOURCE_FILE.name
         )
+
         target_orders, target_rejects = validate_orders(
-            target_raw, "target_orders.csv"
+            target_raw, TARGET_FILE.name
         )
 
         all_rejects = source_rejects + target_rejects
 
         logging.info(
-            "Validation completed. Source rows: %d, target rows: %d, "
-            "valid source: %d, valid target: %d, rejected: %d",
+            "Validation completed. Source=%d Target=%d "
+            "Valid source=%d Valid target=%d Rejected=%d",
             source_row_count,
             target_row_count,
             len(source_orders),
@@ -190,16 +247,30 @@ def main():
             len(all_rejects)
         )
 
-        print("\nData quality validation:")
-        print("Original source rows:", source_row_count)
-        print("Original target rows:", target_row_count)
-        print("Valid source rows:", len(source_orders))
-        print("Valid target rows:", len(target_orders))
-        print("Rejected rows:", len(all_rejects))
-
         results = reconcile(source_orders, target_orders)
 
+        source_total = sum(
+            int(row["amount"]) for row in source_orders
+        )
+
+        target_total = sum(
+            int(row["amount"]) for row in target_orders
+        )
+
+        aggregates_match = source_total == target_total
+
+        reconciliation_passed = (
+            not all_rejects
+            and results["amount_mismatches"] == 0
+            and results["missing_from_source"] == 0
+            and results["missing_from_target"] == 0
+            and aggregates_match
+        )
+
         report = {
+            "run_id": run_id,
+            "started_at": started_at,
+            "finished_at": None,
             "source_row_count": source_row_count,
             "target_row_count": target_row_count,
             "valid_source_rows": len(source_orders),
@@ -209,90 +280,111 @@ def main():
             "amount_mismatches": results["amount_mismatches"],
             "missing_from_source": results["missing_from_source"],
             "missing_from_target": results["missing_from_target"],
-            "source_total_amount": sum(
-                int(row["amount"]) for row in source_orders
-            ),
-            "target_total_amount": sum(
-                int(row["amount"]) for row in target_orders
-            ),
-            "aggregate_difference": sum(
-                int(row["amount"]) for row in target_orders
-            ) - sum(
-                int(row["amount"]) for row in source_orders
-            ),
-            "aggregates_match": sum(
-                int(row["amount"]) for row in source_orders
-            ) == sum(
-            int(row["amount"]) for row in target_orders
-            ),
+            "source_total_amount": source_total,
+            "target_total_amount": target_total,
+            "aggregate_difference": target_total - source_total,
+            "aggregates_match": aggregates_match,
             "reconciliation_status": (
-                "PASSED"
-                if not all_rejects
-                and results["amount_mismatches"] == 0
-                and results["missing_from_source"] == 0
-                and results["missing_from_target"] == 0
-                and report["aggregates_match"]
-                else "FAILED"
-            ),
-
+                "PASSED" if reconciliation_passed else "FAILED"
+            )
         }
 
-        report_file = output_folder / "reconciliation_report.json"
-        with open(report_file, "w", encoding="utf-8") as file:
-            json.dump(report, file, indent=4)
+        mismatch_file = OUTPUT_FOLDER / "mismatches.csv"
 
-        mismatch_file = output_folder / "mismatches.csv"
+        mismatch_rows = []
+
+        for mismatch in results["mismatches"]:
+            mismatch_rows.append({
+                "run_id": run_id,
+                **mismatch
+            })
+
         write_csv(
             mismatch_file,
-            ["order_id", "issue", "source_amount", "target_amount"],
-            results["mismatches"]
+            [
+                "run_id",
+                "order_id",
+                "issue",
+                "source_amount",
+                "target_amount"
+            ],
+            mismatch_rows
         )
 
-        rejects_file = output_folder / "rejects.csv"
+        rejects_file = OUTPUT_FOLDER / "rejects.csv"
+
+        reject_rows = []
+
+        for reject in all_rejects:
+            reject_rows.append({
+                "run_id": run_id,
+                **reject
+            })
+
         write_csv(
             rejects_file,
             [
+                "run_id",
                 "source_file",
                 "source_row_number",
                 "order_id",
                 "amount",
                 "reject_reason"
             ],
-            all_rejects
+            reject_rows
         )
 
         duration = round(time.time() - start_time, 3)
 
+        report["finished_at"] = get_timestamp()
         report["duration_seconds"] = duration
 
         with open(report_file, "w", encoding="utf-8") as file:
             json.dump(report, file, indent=4)
 
         logging.info(
-            "Reconciliation completed. Status: %s, matched: %d, "
-            "amount mismatches: %d, missing from source: %d, "
-            "missing from target: %d, rejected: %d, duration: %.3f seconds",
+            "Reconciliation completed. run_id=%s status=%s "
+            "matched=%d mismatches=%d rejected=%d duration=%.3f",
+            run_id,
             report["reconciliation_status"],
             results["matched_records"],
             results["amount_mismatches"],
-            results["missing_from_source"],
-            results["missing_from_target"],
             len(all_rejects),
             duration
         )
 
-        print("\nJSON report created:", report_file)
-        print(json.dumps(report, indent=4))
-        print("\nMismatch file created:", mismatch_file)
-        print("Total mismatched records:", len(results["mismatches"]))
-        print("Rejects file created:", rejects_file)
-        print("Total rejected rows:", len(all_rejects))
+        print("\nDATA RECONCILIATION SUMMARY")
+        print("---------------------------")
+        print("Run ID:", run_id)
+        print("Source rows:", source_row_count)
+        print("Target rows:", target_row_count)
+        print("Valid source rows:", len(source_orders))
+        print("Valid target rows:", len(target_orders))
+        print("Rejected rows:", len(all_rejects))
+        print("Matched records:", results["matched_records"])
+        print("Amount mismatches:", results["amount_mismatches"])
+        print("Missing from source:", results["missing_from_source"])
+        print("Missing from target:", results["missing_from_target"])
+        print("Source total:", source_total)
+        print("Target total:", target_total)
+        print("Aggregate difference:", target_total - source_total)
+        print("Aggregates match:", aggregates_match)
+        print("Status:", report["reconciliation_status"])
         print("Execution time:", duration, "seconds")
+
+        print("\nOutput files created:")
+        print(report_file)
+        print(mismatch_file)
+        print(rejects_file)
 
         logging.info("Data reconciliation pipeline finished.")
 
-    except Exception:
-        logging.exception("Data reconciliation pipeline failed.")
+    except Exception as error:
+        logging.exception(
+            "Pipeline failed. run_id=%s error=%s",
+            run_id,
+            error
+        )
         raise
 
 

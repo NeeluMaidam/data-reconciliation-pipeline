@@ -1,4 +1,3 @@
-
 import csv
 import random
 from pathlib import Path
@@ -22,23 +21,21 @@ with open(source_file, "w", newline="", encoding="utf-8") as file:
         writer.writerow([f"ORD{i:06d}", amount])
 
 with open(source_file, "r", newline="", encoding="utf-8") as source:
-    source_rows = list(csv.DictReader(source))
+    with open(target_file, "w", newline="", encoding="utf-8") as target:
+        reader = csv.DictReader(source)
+        writer = csv.writer(target)
+        writer.writerow(["order_id", "amount"])
 
-with open(target_file, "w", newline="", encoding="utf-8") as file:
-    writer = csv.writer(file)
-    writer.writerow(["order_id", "amount"])
+        for i, row in enumerate(reader, start=1):
+            amount = int(row["amount"])
 
-    for i, row in enumerate(source_rows, start=1):
-        amount = int(row["amount"])
+            if i % 100 == 0:
+                amount += 50
 
-        if i % 100 == 0:
-            amount += 50
-
-        writer.writerow([row["order_id"], amount])
+            writer.writerow([row["order_id"], amount])
 
 print("Generated source records:", record_count)
 print("Generated target records:", record_count)
 print("Expected matching records:", record_count - record_count // 100)
 print("Expected amount mismatches:", record_count // 100)
 print("Files saved in:", data_folder)
-
