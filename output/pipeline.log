@@ -1,0 +1,96 @@
+2026-10-28 22:13:52,530 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:13:52,887 - INFO - Source and target data loaded successfully.
+2026-10-28 22:13:52,943 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:13:53,091 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.560 seconds
+2026-10-28 22:13:53,092 - INFO - Data reconciliation pipeline finished.
+2026-10-28 22:22:30,326 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:22:30,633 - INFO - Source and target data loaded successfully.
+2026-10-28 22:22:30,717 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:22:30,854 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.526 seconds
+2026-10-28 22:22:30,855 - INFO - Data reconciliation pipeline finished.
+2026-10-28 22:24:54,570 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:24:54,868 - INFO - Source and target data loaded successfully.
+2026-10-28 22:24:54,926 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:24:55,048 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.477 seconds
+2026-10-28 22:24:55,049 - INFO - Data reconciliation pipeline finished.
+2026-10-28 22:25:13,349 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:25:13,663 - INFO - Source and target data loaded successfully.
+2026-10-28 22:25:13,707 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:25:13,833 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.484 seconds
+2026-10-28 22:25:13,844 - INFO - Data reconciliation pipeline finished.
+2026-10-28 22:51:26,403 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:51:26,704 - INFO - Source and target data loaded successfully.
+2026-10-28 22:51:26,748 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:51:26,878 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.474 seconds
+2026-10-28 22:51:26,879 - INFO - Data reconciliation pipeline finished.
+2026-10-28 22:54:42,256 - INFO - Data reconciliation pipeline started.
+2026-10-28 22:54:42,618 - INFO - Source and target data loaded successfully.
+2026-10-28 22:54:42,679 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 22:54:42,852 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.595 seconds
+2026-10-28 22:54:42,853 - INFO - Data reconciliation pipeline finished.
+2026-10-28 23:00:50,083 - INFO - Data reconciliation pipeline started.
+2026-10-28 23:00:50,395 - INFO - Source and target data loaded successfully.
+2026-10-28 23:00:50,453 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 23:00:50,594 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.511 seconds
+2026-10-28 23:00:50,595 - INFO - Data reconciliation pipeline finished.
+2026-10-28 23:03:01,043 - INFO - Data reconciliation pipeline started.
+2026-10-28 23:03:01,376 - INFO - Source and target data loaded successfully.
+2026-10-28 23:03:01,466 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 23:03:01,618 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.574 seconds
+2026-10-28 23:03:01,618 - INFO - Data reconciliation pipeline finished.
+2026-10-28 23:06:26,096 - INFO - Data reconciliation pipeline started.
+2026-10-28 23:06:26,401 - INFO - Source and target data loaded successfully.
+2026-10-28 23:06:26,463 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-28 23:06:26,603 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.507 seconds
+2026-10-28 23:06:26,604 - INFO - Data reconciliation pipeline finished.
+2026-10-29 11:40:51,080 - INFO - Data reconciliation pipeline started.
+2026-10-29 11:40:51,407 - INFO - Source and target data loaded successfully.
+2026-10-29 11:40:51,462 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-29 11:40:51,616 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.535 seconds
+2026-10-29 11:40:51,617 - INFO - Data reconciliation pipeline finished.
+2026-10-29 11:49:29,308 - INFO - Data reconciliation pipeline started.
+2026-10-29 11:49:29,612 - INFO - Source and target data loaded successfully.
+2026-10-29 11:49:29,662 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-29 11:49:29,815 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.506 seconds
+2026-10-29 11:49:29,815 - INFO - Data reconciliation pipeline finished.
+2026-10-29 13:26:04,531 - INFO - Data reconciliation pipeline started.
+2026-10-29 13:26:04,901 - INFO - Source and target data loaded successfully.
+2026-10-29 13:26:04,959 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-29 13:26:05,148 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.617 seconds
+2026-10-29 13:26:05,149 - INFO - Data reconciliation pipeline finished.
+2026-10-29 22:33:12,913 - INFO - Data reconciliation pipeline started.
+2026-10-29 22:33:13,266 - INFO - Source and target data loaded successfully.
+2026-10-29 22:33:13,318 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-29 22:33:13,478 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.565 seconds
+2026-10-29 22:33:13,479 - INFO - Data reconciliation pipeline finished.
+2026-10-30 10:39:10,559 - INFO - Pipeline started. run_id=71079da4-fbbb-44e6-8510-38614de0e573 started_at=2026-10-30T05:09:10.559083+00:00
+2026-10-30 10:39:10,872 - INFO - Source and target data loaded successfully.
+2026-10-30 10:39:10,919 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-30 10:39:11,066 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.506 seconds
+2026-10-30 10:39:11,066 - INFO - Data reconciliation pipeline finished.
+2026-10-30 10:44:02,534 - INFO - Pipeline started. run_id=aa9fa3d0-4687-432a-ad5b-25d7510e2434 started_at=2026-10-30T05:14:02.534856+00:00
+2026-10-30 10:44:02,861 - INFO - Source and target data loaded successfully.
+2026-10-30 10:44:02,913 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-30 10:44:03,057 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.522 seconds
+2026-10-30 10:44:03,057 - INFO - Data reconciliation pipeline finished.
+2026-10-30 10:49:24,759 - INFO - Pipeline started. run_id=6e493236-d2e5-4895-bba0-45bdd43acd13 started_at=2026-10-30T05:19:24.759559+00:00
+2026-10-30 10:49:25,114 - INFO - Source and target data loaded successfully.
+2026-10-30 10:49:25,183 - INFO - Validation completed. Source rows: 100000, target rows: 100000, valid source: 100000, valid target: 100000, rejected: 0
+2026-10-30 10:49:25,322 - INFO - Reconciliation completed. Status: FAILED, matched: 99000, amount mismatches: 1000, missing from source: 0, missing from target: 0, rejected: 0, duration: 0.562 seconds
+2026-10-30 10:49:25,322 - INFO - Data reconciliation pipeline finished.
+2026-10-30 10:53:50,888 - INFO - Pipeline started. run_id=304e8bf3-8059-4a56-93a6-6a3f74fda35f started_at=2026-10-30T05:23:50.888918+00:00
+2026-10-30 10:53:51,387 - INFO - Validation completed. Source=100000 Target=100000 Valid source=100000 Valid target=100000 Rejected=0
+2026-10-30 10:53:51,515 - INFO - Reconciliation completed. run_id=304e8bf3-8059-4a56-93a6-6a3f74fda35f status=FAILED matched=99000 mismatches=1000 rejected=0 duration=0.626
+2026-10-30 10:53:51,517 - INFO - Data reconciliation pipeline finished.
+2026-10-30 11:00:51,398 - INFO - Pipeline started. run_id=0fdb1b8c-7497-4e22-b5e6-1473b83c33a4 started_at=2026-10-30T05:30:51.398578+00:00
+2026-10-30 11:00:51,921 - INFO - Validation completed. Source=100000 Target=100000 Valid source=100000 Valid target=100000 Rejected=0
+2026-10-30 11:00:52,072 - INFO - Reconciliation completed. run_id=0fdb1b8c-7497-4e22-b5e6-1473b83c33a4 status=FAILED matched=99000 mismatches=1000 rejected=0 duration=0.673
+2026-10-30 11:00:52,075 - INFO - Data reconciliation pipeline finished.
+2026-10-30 11:15:14,617 - INFO - Pipeline started. run_id=2ded4140-f18f-4953-af98-9db75c6d3dfd started_at=2026-10-30T05:45:14.617016+00:00
+2026-10-30 11:15:15,137 - INFO - Validation completed. Source=100000 Target=100000 Valid source=100000 Valid target=100000 Rejected=0
+2026-10-30 11:15:15,277 - INFO - Reconciliation completed. run_id=2ded4140-f18f-4953-af98-9db75c6d3dfd status=FAILED matched=99000 mismatches=1000 rejected=0 duration=0.660
+2026-10-30 11:15:15,281 - INFO - Data reconciliation pipeline finished.
+2026-10-30 11:42:17,960 - INFO - Pipeline started. run_id=ee1259ea-7088-4bb7-8e17-c2ce4d6d9fbb started_at=2026-10-30T06:12:17.960560+00:00
+2026-10-30 11:42:18,452 - INFO - Validation completed. Source=100000 Target=100000 Valid source=100000 Valid target=100000 Rejected=0
+2026-10-30 11:42:18,589 - INFO - Reconciliation completed. run_id=ee1259ea-7088-4bb7-8e17-c2ce4d6d9fbb status=FAILED matched=99000 mismatches=1000 rejected=0 duration=0.628
+2026-10-30 11:42:18,590 - INFO - Data reconciliation pipeline finished.
