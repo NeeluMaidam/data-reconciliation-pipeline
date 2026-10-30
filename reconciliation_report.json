@@ -1,0 +1,20 @@
+{
+    "run_id": "ee1259ea-7088-4bb7-8e17-c2ce4d6d9fbb",
+    "started_at": "2026-10-30T06:12:17.960560+00:00",
+    "finished_at": "2026-10-30T06:12:18.588570+00:00",
+    "source_row_count": 100000,
+    "target_row_count": 100000,
+    "valid_source_rows": 100000,
+    "valid_target_rows": 100000,
+    "rejected_rows": 0,
+    "matched_records": 99000,
+    "amount_mismatches": 1000,
+    "missing_from_source": 0,
+    "missing_from_target": 0,
+    "source_total_amount": 505125686,
+    "target_total_amount": 505175686,
+    "aggregate_difference": 50000,
+    "aggregates_match": false,
+    "reconciliation_status": "FAILED",
+    "duration_seconds": 0.628
+}
